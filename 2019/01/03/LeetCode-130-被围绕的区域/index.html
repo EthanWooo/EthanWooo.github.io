@@ -66,7 +66,8 @@
     X X X X
     X O X X
 解释:
-    被围绕的区间不会存在于边界上，换句话说，任何边界上的 &apos;O&apos; 都不会被填充为 &apos;X&apos;。 任何不在边界上，或不与边界上的 &apos;O&apos; 相连的 &apos;O&apos; 最终都会被填充为 &apos;X&apos;。如果两个元素在水平或垂直方向相邻，则称它们是“相连”的。
+    被围绕的区间不会存在于边界上，换句话说，任何边界上的 &apos;O&apos; 都不会被填充为 &apos;X&apos;。任何不在边界上，或不与边界上的 &apos;O&apos; 相连的 &apos;O&apos; 最终都会被填充为
+    &apos;X&apos;。如果两个元素在水平或垂直方向相邻，则称它们是“相连”的。
 </code></pre><h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><ul>
 <li>先对边界上每一个’O’做深度优先搜索，将与其相连的所有’O’改为’-‘</li>
 <li>遍历矩阵，将矩阵中所有’O’改为’X’,将矩阵中所有’-‘变为’O’</li>
@@ -76,7 +77,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://ethanwooo.github.io/2019/01/03/LeetCode-130-被围绕的区域/" data-id="cjqfzlo5g00047x76zowsyyg9" class="article-share-link">分享</a>
+      <a data-url="https://ethanwooo.github.io/2019/01/03/LeetCode-130-被围绕的区域/" data-id="cjqfzqbg700048n76ddaf0f6i" class="article-share-link">分享</a>
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并查集/">并查集</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/广度优先搜索-BFS/">广度优先搜索_BFS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/深度优先搜索-DFS/">深度优先搜索_DFS</a></li></ul>
 

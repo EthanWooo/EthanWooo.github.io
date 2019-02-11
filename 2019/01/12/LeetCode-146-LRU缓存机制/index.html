@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>
+    [LeetCode]146 LRU缓存机制 |
+    
+    Ethan Woo</title>
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+  
+  <script src="/js/pace.min.js"></script>
+</head>
+</html>
+<body>
+<main class="content">
+  <section class="outer">
+  <article id="post-LeetCode-146-LRU缓存机制" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      [LeetCode]146 LRU缓存机制
+    </h1>
+  
+
+      </header>
+    
+
+    
+      <div class="article-meta">
+        <a href="/2019/01/12/LeetCode-146-LRU缓存机制/" class="article-date">
+  <time datetime="2019-01-12T12:44:07.000Z" itemprop="datePublished">2019-01-12</time>
+</a>
+        
+      </div>
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+      
+        <h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p>运用你所掌握的数据结构，设计和实现一个 LRU (最近最少使用) 缓存机制。它应该支持以下操作:获取数据 <code>get</code> 和 写入数据 <code>put</code> 。<br><a id="more"></a><br>获取数据 <code>get(key)</code> - 如果密钥 (key) 存在于缓存中，则获取密钥的值（总是正数），否则返回 -1。<br>写入数据 <code>put(key, value)</code> - 如果密钥不存在，则写入其数据值。当缓存容量达到上限时，它应该在写入新数据之前删除最近最少使用的数据值，从而为新的数据值留出空间。<br><strong>进阶:</strong><br>你是否可以在 <strong>O(1)</strong> 时间复杂度内完成这两种操作？</p>
+<p><strong>示例</strong></p>
+<pre><code>LRUCache cache = new LRUCache( 2 /* 缓存容量 */ );
+cache.put(1, 1);
+cache.put(2, 2);
+cache.get(1);       // 返回  1
+cache.put(3, 3);    // 该操作会使得密钥 2 作废
+cache.get(2);       // 返回 -1 (未找到)
+cache.put(4, 4);    // 该操作会使得密钥 1 作废
+cache.get(1);       // 返回 -1 (未找到)
+cache.get(3);       // 返回  3
+cache.get(4);       // 返回  4
+</code></pre><h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><ul>
+<li>双向链表+哈希表</li>
+</ul>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LinkNode</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, key, val, prev_node=None, next_node=None)</span>:</span></span><br><span class="line">        self.key = key</span><br><span class="line">        self.val = val</span><br><span class="line">        self.prev = prev_node</span><br><span class="line">        self.next = next_node</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DoubleLinkList</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, capacity)</span>:</span></span><br><span class="line">        self.capacity = capacity</span><br><span class="line">        self.size = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        self.head = <span class="keyword">None</span></span><br><span class="line">        self.tail = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">append</span><span class="params">(self, node)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        :param node:</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        append a node to the double link list last</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">if</span> self.size == self.capacity:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">"The double link list has been full."</span>)</span><br><span class="line"></span><br><span class="line">        self.size += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> self.head <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">            self.head = self.tail = node</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        self.tail.next = node</span><br><span class="line">        node.prev = self.tail</span><br><span class="line">        self.tail = node</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">delete</span><span class="params">(self, node)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        :param node:</span></span><br><span class="line"><span class="string">        :return node:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        delete a node in double link list. switch(node):</span></span><br><span class="line"><span class="string">           1.node == self.head</span></span><br><span class="line"><span class="string">           2.node == self.tail</span></span><br><span class="line"><span class="string">           3.node in the double link list middle</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">if</span> self.size == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">"can not delete empty double link list"</span>)</span><br><span class="line"></span><br><span class="line">        self.size -= <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> node == self.head:</span><br><span class="line">            <span class="keyword">if</span> node.next:</span><br><span class="line">                node.next.prev = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">            self.head = node.next</span><br><span class="line">        <span class="keyword">elif</span> node == self.tail:</span><br><span class="line">            <span class="keyword">if</span> node.prev:</span><br><span class="line">                node.prev.next = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">            self.tail = node.prev</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            node.prev.next = node.next</span><br><span class="line">            node.next.prev = node.prev</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> node</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LRUCache</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, capacity)</span>:</span></span><br><span class="line">        self.capacity = capacity</span><br><span class="line">        self.cache_look_up = &#123;&#125;</span><br><span class="line">        self.cache_list = DoubleLinkList(capacity)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, key)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> key <span class="keyword">not</span> <span class="keyword">in</span> self.cache_look_up:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span></span><br><span class="line"></span><br><span class="line">        node = self.cache_look_up[key]</span><br><span class="line">        self.cache_list.delete(node)</span><br><span class="line">        self.cache_list.append(node)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> node.val</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">put</span><span class="params">(self, key, value)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> key <span class="keyword">in</span> self.cache_look_up:</span><br><span class="line">            node = self.cache_look_up[key]</span><br><span class="line">            node.val = value</span><br><span class="line">            self.cache_list.delete(node)</span><br><span class="line">            self.cache_list.append(node)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> self.capacity == self.cache_list.size:</span><br><span class="line">                head_node = self.cache_list.delete(self.cache_list.head)</span><br><span class="line">                <span class="keyword">del</span> self.cache_look_up[head_node.key]</span><br><span class="line"></span><br><span class="line">            new_node = LinkNode(key, value)</span><br><span class="line">            self.cache_look_up[key] = new_node</span><br><span class="line">            self.cache_list.append(new_node)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://ethanwooo.github.io/2019/01/12/LeetCode-146-LRU缓存机制/" data-id="cjs00druc00384c76f944qtg9" class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计/">设计</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+    
+  <nav class="article-nav">
+    
+      <a href="/2019/01/13/LeetCode-147-对链表进行插入排序/" class="article-nav-link">
+        <strong class="article-nav-caption">前一篇</strong>
+        <div class="article-nav-title">
+          
+            [LeetCode]147 对链表进行插入排序
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/01/11/LeetCode-145-二叉树的后序遍历/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">[LeetCode]145 二叉树的后序遍历</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+    
+  
+
+</article>
+
+
+
+</section>
+  <footer class="footer">
+  
+  <div class="outer">
+    <ul class="list-inline">
+      <li>&copy; 2019 Ethan Woo</li>
+      <li>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></li>
+    </ul>
+  </div>
+</footer>
+</main>
+<aside class="sidebar">
+  <button class="navbar-toggle"></button>
+
+<nav class="navbar">
+  
+    <div class="logo">
+      <a href="/"><img src="/images/hexo.svg" alt="Ethan Woo"></a>
+    </div>
+  
+  <ul class="nav nav-main">
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/">Home</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/archives">Archives</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/gallery">Gallery</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/about">About</a>
+      </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link nav-item-search" title="Search">
+        <i class="fe fe-search"></i>
+        Search
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+        <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+          <i class="fe fe-feed"></i>
+        </a>
+      
+    </li>
+  </ul>
+</nav>
+
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+</aside>
+  <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+
+
+  <script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/ocean.js"></script>
+
+</body>
+</html>

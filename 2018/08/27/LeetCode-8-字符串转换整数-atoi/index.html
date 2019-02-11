@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>
+    [LeetCode]8 字符串转换整数 (atoi) |
+    
+    Ethan Woo</title>
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+  
+  <script src="/js/pace.min.js"></script>
+</head>
+</html>
+<body>
+<main class="content">
+  <section class="outer">
+  <article id="post-LeetCode-8-字符串转换整数-atoi" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      [LeetCode]8 字符串转换整数 (atoi)
+    </h1>
+  
+
+      </header>
+    
+
+    
+      <div class="article-meta">
+        <a href="/2018/08/27/LeetCode-8-字符串转换整数-atoi/" class="article-date">
+  <time datetime="2018-08-27T15:40:17.000Z" itemprop="datePublished">2018-08-27</time>
+</a>
+        
+      </div>
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+      
+        <h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p>请你来实现一个 <code>atoi</code> 函数，使其能将字符串转换成整数。<br><a id="more"></a></p>
+<p>首先，该函数会根据需要丢弃无用的开头空格字符，直到寻找到第一个非空格的字符为止。</p>
+<p>当我们寻找到的第一个非空字符为正或者负号时，则将该符号与之后面尽可能多的连续数字组合起来，作为该整数的正负号；假如第一个非空字符是数字，则直接将其与之后连续的数字字符组合起来，形成整数。</p>
+<p>该字符串除了有效的整数部分之后也可能会存在多余的字符，这些字符可以被忽略，它们对于函数不应该造成影响。</p>
+<p>注意：假如该字符串中的第一个非空格字符不是一个有效整数字符、字符串为空或字符串仅包含空白字符时，则你的函数不需要进行转换。</p>
+<p>在任何情况下，若函数不能进行有效的转换时，请返回 0。</p>
+<p><strong>示例1:</strong></p>
+<pre><code>输入: &quot;42&quot;
+输出: 42
+</code></pre><p><strong>示例2:</strong></p>
+<pre><code>输入: &quot;-42&quot;
+输出: -42
+解释: 第一个非空白字符为 &apos;-&apos;, 它是一个负号。
+     我们尽可能将负号与后面所有连续出现的数字组合起来，最后得到 -42 。
+</code></pre><p><strong>示例3:</strong></p>
+<pre><code>输入: &quot;4193 with words&quot;
+输出: 4193
+解释: 转换截止于数字 &apos;3&apos; ，因为它的下一个字符不为数字。
+</code></pre><p><strong>示例4:</strong></p>
+<pre><code>输入: &quot;words and 987&quot;
+输出: 0
+解释: 第一个非空字符是 &apos;w&apos;, 但它不是数字或正、负号。
+     因此无法执行有效的转换。
+</code></pre><p><strong>示例5:</strong></p>
+<pre><code>输入: &quot;-91283472332&quot;
+输出: -2147483648
+解释: 数字 &quot;-91283472332&quot; 超过 32 位有符号整数范围。 
+     因此返回 INT_MIN (−231) 。
+</code></pre><h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">myAtoi</span><span class="params">(self, str)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type str: str</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">import</span> re</span><br><span class="line">        </span><br><span class="line">        INT_MAX = <span class="number">2</span>**<span class="number">31</span> <span class="number">-1</span></span><br><span class="line">        INT_MIN = <span class="number">-2</span>**<span class="number">31</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (re.match(<span class="string">"\D*[a-zA-Z\.]|\s*(\+|\-)(\+|\-)+.*|.*(\+|\-)+\s+.*"</span>, str)):</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        num_line = re.search(<span class="string">"[+-]?[0-9]+(\.?\d+)?"</span>, str)</span><br><span class="line">        result = int(float(num_line.group())) <span class="keyword">if</span> num_line <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">        result = result <span class="keyword">if</span> result &lt; INT_MAX <span class="keyword">else</span> INT_MAX</span><br><span class="line">        result = result <span class="keyword">if</span> result &gt; INT_MIN <span class="keyword">else</span> INT_MIN</span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://ethanwooo.github.io/2018/08/27/LeetCode-8-字符串转换整数-atoi/" data-id="cjs00drxu00aa4c76v3fqhe74" class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/字符串/">字符串</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数学/">数学</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+    
+  <nav class="article-nav">
+    
+      <a href="/2018/08/28/LeetCode-9-回文数/" class="article-nav-link">
+        <strong class="article-nav-caption">前一篇</strong>
+        <div class="article-nav-title">
+          
+            [LeetCode]9 回文数
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2018/08/26/LeetCode-7-整数反转/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">[LeetCode]7 整数反转</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+    
+  
+
+</article>
+
+
+
+</section>
+  <footer class="footer">
+  
+  <div class="outer">
+    <ul class="list-inline">
+      <li>&copy; 2019 Ethan Woo</li>
+      <li>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></li>
+    </ul>
+  </div>
+</footer>
+</main>
+<aside class="sidebar">
+  <button class="navbar-toggle"></button>
+
+<nav class="navbar">
+  
+    <div class="logo">
+      <a href="/"><img src="/images/hexo.svg" alt="Ethan Woo"></a>
+    </div>
+  
+  <ul class="nav nav-main">
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/">Home</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/archives">Archives</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/gallery">Gallery</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/about">About</a>
+      </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link nav-item-search" title="Search">
+        <i class="fe fe-search"></i>
+        Search
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+        <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+          <i class="fe fe-feed"></i>
+        </a>
+      
+    </li>
+  </ul>
+</nav>
+
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+</aside>
+  <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+
+
+  <script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/ocean.js"></script>
+
+</body>
+</html>
